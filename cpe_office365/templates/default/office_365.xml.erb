@@ -1,0 +1,38 @@
+<Configuration ID="11d34e4c-1fc8-4e3d-9f1b-8c3f71a36f60">
+<%- if @install%>
+  <Info Description="Excludes &#xA;Access &#xA;OneDrive (Groove) &#xA;Skype for Business &#xA;OneDrive Desktop &#xA;Publisher &#xA;Teams" />
+  <Add OfficeClientEdition="<%=@officeclientedition%>" Channel="<%=@channel%>" MigrateArch="<%=@migratearch%>">
+    <Product ID="<%=@product_id%>">
+      <Language ID="MatchOS" />
+      <Language ID="MatchPreviousMSI" />
+      <% @excluded_apps.each do |apps| -%>
+      <ExcludeApp ID="<%= apps %>" />
+      <% end -%>
+    </Product>
+  </Add>
+  <Property Name="SharedComputerLicensing" Value="<%=@sharedcomputerlicensing%>" />
+  <Property Name="SCLCacheOverride" Value="<%=@sclcacheoverride%>" />
+  <Property Name="AUTOACTIVATE" Value="<%=@autoactivate%>" />
+  <Property Name="FORCEAPPSHUTDOWN" Value="<%=@forceappshutdown%>" />
+  <Property Name="DeviceBasedLicensing" Value="<%=@devicebasedlicensing%>" />
+  <Updates Enabled="<%=@updates_enabled%>" />
+  <RemoveMSI>
+    <IgnoreProduct ID="PrjPro" />
+    <IgnoreProduct ID="PrjStd" />
+    <IgnoreProduct ID="VisPro" />
+    <IgnoreProduct ID="VisStd" />
+  </RemoveMSI>
+  <AppSettings>
+    <Setup Name="Company" Value="<%=@company%>" />
+    <User Key="software\microsoft\office\16.0\excel\options" Name="defaultformat" Value="51" Type="REG_DWORD" App="excel16" Id="L_SaveExcelfilesas" />
+    <User Key="software\microsoft\office\16.0\powerpoint\options" Name="defaultformat" Value="27" Type="REG_DWORD" App="ppt16" Id="L_SavePowerPointfilesas" />
+    <User Key="software\microsoft\office\16.0\word\options" Name="defaultformat" Value="" Type="REG_SZ" App="word16" Id="L_SaveWordfilesas" />
+  </AppSettings>
+  <Display Level="<%=@display_level%>" AcceptEULA="<%=@accepteula%>" />
+<%- else %>
+  <Display Level="<%=@display_level%>" AcceptEULA="<%=@accepteula%>" />
+  <Property Name="FORCEAPPSHUTDOWN" Value="<%=@forceappshutdown%>" />
+  <Remove All="<%=@remove_all%>" />
+  <RemoveMSI />
+<%- end %>
+</Configuration>
