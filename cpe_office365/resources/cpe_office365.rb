@@ -1,10 +1,10 @@
 #
-# Cookbook Name: => cpe_office365
-# Resources: => cpe_office365
+# Cookbook Name:: cpe_office365
+# Resources:: cpe_office365
 #
-# vim => syntax=ruby:expandtab:shiftwidth=2:softtabstop=2:tabstop=2
+# vim: syntax=ruby:expandtab:shiftwidth=2:softtabstop=2:tabstop=2
 #
-# Copyright (c) 2019-present, Uber Technologies, Inc.
+# Copyright (c) 2021-present, Uber Technologies, Inc.
 # All rights reserved.
 #
 # This source code is licensed under the Apache 2.0 license found in the
@@ -34,21 +34,26 @@ action_class do # rubocop:disable Metrics/BlockLength
     template conf_path do
       source "#{conf_name}.erb"
       variables(
-        :install => install?,
         :excluded_apps => office_365_excluded_apps,
-        :migratearch => office_365_config_hash['migratearch'],
+        :migrate_arch => office_365_config_hash['migrate_arch'],
         :channel => office_365_config_hash['channel'],
-        :officeclientedition => office_365_config_hash['officeclientedition'],
+        :office_client_edition => office_365_config_hash['office_client_edition'],
         :product_id => office_365_config_hash['product_id'],
-        :sharedcomputerlicensing => office_365_config_hash['sharedcomputerlicensing'],
-        :sclcacheoverride => office_365_config_hash['sclcacheoverride'],
-        :autoactivate => office_365_config_hash['autoactivate'],
-        :forceappshutdown => office_365_config_hash['forceappshutdown'],
-        :devicebasedlicensing => office_365_config_hash['devicebasedlicensing'],
+        :shared_computer_licensing => office_365_config_hash['shared_computer_licensing'],
+        :scl_cache_override => office_365_config_hash['scl_cache_override'],
+        :auto_activate => office_365_config_hash['auto_activate'],
+        :force_app_shutdown => office_365_config_hash['force_app_shutdown'],
+        :device_based_licensing => office_365_config_hash['device_based_licensing'],
         :updates_enabled => office_365_config_hash['updates_enabled'],
         :company => office_365_config_hash['company'],
         :display_level => office_365_config_hash['display_level'],
-        :accepteula => office_365_config_hash['accepteula'],
+        :accept_eula => office_365_config_hash['accept_eula'],
+        :remove_msi => office_365_config_hash['remove_msi'],
+        :match_os => office_365_config_hash['match_os'],
+        :match_previous_msi => office_365_config_hash['match_previous_msi'],
+        :exclude => office_365_config_hash['exclude'],
+        :ignore_product => office_365_config_hash['ignore_product'],
+        :ignored_products => office_365_config_hash['ignored_products'],
       )
     end
   end
@@ -57,11 +62,11 @@ action_class do # rubocop:disable Metrics/BlockLength
     template conf_path do
       source "#{conf_name}.erb"
       variables(
-        :uninstall => uninstall?,
         :display_level => office_365_config_hash['display_level'],
-        :accepteula => office_365_config_hash['accepteula'],
+        :accept_eula => office_365_config_hash['accept_eula'],
         :remove_all => office_365_config_hash['remove_all'],
-        :forceappshutdown => office_365_config_hash['forceappshutdown'],
+        :remove_msi => office_365_config_hash['remove_msi'],
+        :force_app_shutdown => office_365_config_hash['force_app_shutdown'],
       )
     end
   end
@@ -105,20 +110,20 @@ action_class do # rubocop:disable Metrics/BlockLength
     end
     # Cleanup Installation Files
     file conf_path do
-      action :delete
+      action :nothing
     end
 
     file exe_path do
-      action :delete
+      action :nothing
     end
   end
 
-  def office_365_excluded_apps
-    office_365_config_hash['excluded_apps'].flatten
+  def office_365_requested_apps
+    office_365_catalog_hash.select {|k, v| v == true }.keys
   end
 
-  def office_365_requested_apps
-    office_365_config_hash['requested_apps'].flatten
+  def office_365_excluded_apps
+    office_365_catalog_hash.select {|k, v| v == false }.keys
   end
 
   def office_365_pkg_installed?
@@ -142,18 +147,20 @@ action_class do # rubocop:disable Metrics/BlockLength
 
   def office_365_bin
     node['cpe_office365']['bin'].to_h.reject do |_k, v|
-      v.nil? || v.empty?
+      v.nil?
     end
   end
 
   def office_365_config_hash
     node['cpe_office365']['config'].to_h.reject do |_k, v|
-      v.nil? || v.empty?
+      v.nil?
     end
   end
 
-  def office_365_app_catalog
-    node['cpe_office365']['catalog']
+  def office_365_catalog_hash
+    node['cpe_office365']['catalog'].to_h.reject do |_k, v|
+      v.nil?
+    end
   end
 
   def bin_name

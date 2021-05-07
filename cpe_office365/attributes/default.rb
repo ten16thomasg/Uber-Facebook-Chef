@@ -4,7 +4,7 @@
 #
 # vim: syntax=ruby:expandtab:shiftwidth=2:softtabstop=2:tabstop=2
 #
-# Copyright (c) 2019-present, Uber Technologies, Inc.
+# Copyright (c) 2021-present, Uber Technologies, Inc.
 # All rights reserved.
 #
 # This source code is licensed under the Apache 2.0 license found in the
@@ -20,36 +20,40 @@ default['cpe_office365'] = {
     'checksum' => nil,
   },
   'config' => {
-    'requested_apps' => [],
-    'excluded_apps' => [],
     'conf_name' => nil,
-    'migratearch' => nil,
+    'migrate_arch' => nil,
     'channel' => nil,
-    'officeclientedition' => nil,
+    'office_client_edition' => nil,
     'product_id' => nil,
-    'sharedcomputerlicensing' => nil,
-    'sclcacheoverride' => nil,
-    'autoactivate' => nil,
-    'forceappshutdown' => nil,
-    'devicebasedlicensing' => nil,
+    'shared_computer_licensing' => nil,
+    'scl_cache_override' => nil,
+    'auto_activate' => nil,
+    'force_app_shutdown' => nil,
+    'device_based_licensing' => nil,
     'updates_enabled' => nil,
     'company' => nil,
     'display_level' => nil,
-    'accepteula' => nil,
+    'accept_eula' => nil,
     'remove_all' => nil,
+    'remove_msi' => nil,
+    'match_os' => nil,
+    'match_previous_msi' => nil,
+    'exclude' => nil,
+    'ignore_product' => nil,
+    'ignored_products' => [],
   },
-  'catalog' => [
-    'access',
-    'bing',
-    'excel',
-    'groove',
-    'lync',
-    'onenote',
-    'oneDrive',
-    'outlook',
-    'powerpoint',
-    'publisher',
-    'teams',
-    'word',
-  ],
+  'catalog' => {
+    'access' => false,
+    'bing' => false,
+    'excel' => false,
+    'groove' => false,
+    'lync' => false,
+    'onenote' => false,
+    'oneDrive' => false,
+    'outlook' => false,
+    'powerpoint' => false,
+    'publisher' => false,
+    'teams' => false,
+    'word' => false,
+  },
 }
